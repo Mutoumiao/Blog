@@ -9,13 +9,22 @@ module.exports = {
       },
       {
         text: 'Blog',
-        link: '/blog/',
+        link: '/blog/websocket',
       },
       {
         text: 'GiHub',
         link: 'https://github.com/vuejs/vitepress/releases'
       }
     ],
+    sidebar: {
+      '/blog/': [
+        {
+          text: 'HTML',
+          children: [
+            { text: 'WebSocket', link: '/blog/websocket' },
+          ]
+        }
+      ]
+    }
   },
-
 }
