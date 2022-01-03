@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>test websocket</title>
+  </head>
+
+  <body>
+    <input type="text" id="input" value="发送的文本内容" /><br />
+    <input type="button" value="发送消息" id="send" /><br />
+    <h3>接收到的消息：</h3>
+    <p></p>
+    <input type="button" value="关闭聊天" id="close" /><br />
+    <script>
+      const ws = new WebSocket('ws://localhost:3030/', 'parameter');
+      ws.addEventListener('open', () => {
+        console.log('创建websocket连接');
+      });
+
+      ws.addEventListener('message', (response) => {
+        console.log('接收到的数据', response.data);
+      });
+
+      ws.addEventListener('close', () => {
+        console.log('连接已关闭');
+      });
+
+      ws.addEventListener('error', () => {
+        console.log('websocket 连接出错');
+      });
+
+      document.querySelector('#send').addEventListener('click', function () {
+        ws.send(document.querySelector('#input').value);
+      });
+
+      document.querySelector('#close').addEventListener('click', function () {
+        ws.close();
+      });
+    </script>
+  </body>
+</html>

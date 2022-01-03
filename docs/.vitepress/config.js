@@ -10,10 +10,11 @@ module.exports = {
       {
         text: 'Blog',
         link: '/blog/websocket',
+        activeMatch: '^/blog/'
       },
       {
         text: 'GiHub',
-        link: 'https://github.com/vuejs/vitepress/releases'
+        link: 'https://github.com/Mutoumiao/Blog'
       }
     ],
     sidebar: {
@@ -22,6 +23,7 @@ module.exports = {
           text: 'HTML',
           children: [
             { text: 'WebSocket', link: '/blog/websocket' },
+            { text: '常用meta', link: '/blog/meta'}
           ]
         }
       ]
