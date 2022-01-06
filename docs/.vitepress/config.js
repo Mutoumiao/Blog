@@ -23,7 +23,8 @@ module.exports = {
           text: 'HTML',
           children: [
             { text: 'WebSocket', link: '/blog/websocket' },
-            { text: '常用meta', link: '/blog/meta'}
+            { text: '常用meta', link: '/blog/meta'},
+            { text: 'Web Storage', link: '/blog/storage'}
           ]
         }
       ]
