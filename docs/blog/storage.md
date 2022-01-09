@@ -231,6 +231,7 @@ const storage = new StorageAPI(window.localStorage, options);
 
 - [使用 IndexedDB](https://developer.mozilla.org/zh-CN/docs/Web/API/IndexedDB_API/Using_IndexedDB)
 - [Indexed 入门](https://wangdoc.com/javascript/bom/indexeddb.html#indexeddb-%E5%AF%B9%E8%B1%A1)
+- [IndexedDB 离线存储实践总结](https://zhuanlan.zhihu.com/p/338294642)
 
 ## Web SQL
 

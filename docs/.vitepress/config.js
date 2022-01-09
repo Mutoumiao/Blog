@@ -24,7 +24,8 @@ module.exports = {
           children: [
             { text: 'WebSocket', link: '/blog/websocket' },
             { text: '常用meta', link: '/blog/meta'},
-            { text: 'Web Storage', link: '/blog/storage'}
+            { text: 'Web Storage', link: '/blog/storage'},
+            { text: 'Web Worker', link: '/blog/webWorker'},
           ]
         }
       ]
