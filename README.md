@@ -2,4 +2,4 @@
 
 ## Technical Features
 
-- ⚡️ [vitepress](https://github.com/vuejs/vitepress)、 [Vite](https://github.com/vitejs/vite)、 [pnpm](https://pnpm.js.org/)
+- ⚡️ [vitepress](https://github.com/vuejs/vitepress)、 [Vite](https://github.com/vitejs/vite)
