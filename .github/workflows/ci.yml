@@ -22,5 +22,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          script: |
-            blogRelease
+          script: cd /home/www/Blog && git pull && npm i && npm run build && nginx -s reload
