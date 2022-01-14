@@ -1,6 +1,7 @@
 module.exports = {
   title: '🪵🐱 Blog',
   description: 'Welcome here, this is my Blog!',
+  author: 'mutoumiao,839608583@qq.com',
   lang: 'zh-cmn-Hans',
   themeConfig: {
     nav: [
@@ -23,7 +24,7 @@ module.exports = {
           text: 'HTML',
           children: [
             { text: 'WebSocket', link: '/blog/websocket' },
-            { text: '常用meta', link: '/blog/meta'},
+            { text: 'HTML Meta', link: '/blog/meta'},
             { text: 'Web Storage', link: '/blog/storage'},
             { text: 'Web Worker', link: '/blog/webWorker'},
           ]
