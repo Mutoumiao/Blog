@@ -28,6 +28,12 @@ module.exports = {
             { text: 'Web Storage', link: '/blog/storage'},
             { text: 'Web Worker', link: '/blog/webWorker'},
           ]
+        },
+        {
+          text: 'TypeScript',
+          children: [
+            { text: 'TypeScript语言', link: '/blog/TypeScript' },
+          ]
         }
       ]
     }
