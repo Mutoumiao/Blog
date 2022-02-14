@@ -10,7 +10,7 @@ module.exports = {
       },
       {
         text: 'Blog',
-        link: '/blog/websocket',
+        link: '/blog/TypeScript',
         activeMatch: '^/blog/'
       },
       {
@@ -21,6 +21,13 @@ module.exports = {
     sidebar: {
       '/blog/': [
         {
+          text: 'TypeScript',
+          children: [
+            { text: 'TypeScript语言', link: '/blog/TypeScript' },
+            // { text: '题目练习', link: '/blog/tsQuestions' }
+          ]
+        },
+        {
           text: 'HTML',
           children: [
             { text: 'WebSocket', link: '/blog/websocket' },
@@ -29,12 +36,7 @@ module.exports = {
             { text: 'Web Worker', link: '/blog/webWorker'},
           ]
         },
-        {
-          text: 'TypeScript',
-          children: [
-            { text: 'TypeScript语言', link: '/blog/TypeScript' },
-          ]
-        }
+  
       ]
     }
   },
