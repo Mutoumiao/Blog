@@ -61,10 +61,10 @@ tsc -p ./path/to/tsconfig.json  # 指定特定路径编译
 ```ts
 // helloWorld.ts
 function sayHello(person: string) {
-    return 'Hello, ' + person;
+    return "Hello, " + person;
 }
 
-let user = 'Tom';
+let user = "Tom";
 console.log(sayHello(user));
 ```
 
@@ -79,9 +79,9 @@ tsc helloWorld.ts
 ```js
 // helloWorld.js
 function sayHello(person) {
-    return 'Hello, ' + person;
+    return "Hello, " + person;
 }
-var user = 'Tom';
+var user = "Tom";
 console.log(sayHello(user));
 ```
 
@@ -91,7 +91,7 @@ console.log(sayHello(user));
 
 ![setting](../images/localeSetting.png)
 
-## 原始类型
+## 基本类型
 
 ### 数字（Number）
 
@@ -111,7 +111,7 @@ let infinityNumber = Infinity;
 ### 字符串（String）
 
 ```ts
-let myName: string = 'Tom';
+let myName: string = "Tom";
 let sentence: string = `Hello my name is ${myName}`
 ```
 
@@ -158,7 +158,7 @@ let anotherHundred: bigint = 100n;
 
 ```ts
 function sayHello(): void {
-  console.log('Hello World')
+  console.log("Hello World")
 }
 ```
 
@@ -178,27 +178,9 @@ let v3: void = 5  // error
 declare let foo: number;
 declare let bar: bigint;
 
-foo = bar; // error: Type 'bigint' is not assignable to type 'number'.
-bar = foo; // error: Type 'number' is not assignable to type 'bigint'.
+foo = bar; // error: Type "bigint" is not assignable to type "number".
+bar = foo; // error: Type "number" is not assignable to type "bigint".
 ```
-
-### Any（任意类型）
-
-任意类型`any`表示允许赋值为任意类型
-
-```ts
-let message: sting = 'Hello World';
-message = 2  // error
-
-
-// any
-let message: any = 'Hello World';
-message = 3   // ok
-```
-
-任意类型可以调用任何属性与方法，与JavaScript原先写法一致，TypeScript将不会检查当前是否存在该属性与方法。出错将无法在编译阶段发现。
-
-因此请尽量避免使用`any`。否则与不使用TypeScript没有任何区别
 
 ### Null 与 Undefined
 
@@ -212,20 +194,91 @@ let u: undefined = undefined
 let a: any = n || u
 ```
 
-### 总结
+### Any（任意类型）
 
-TypeScript 中的原始类型
+任意类型`any`表示允许赋值为任意类型
 
-- 布尔类型：`boolean`
-- 数字类型：`number`
-- 字符串类型：`string`
-- 空值：`void`
-- Null 和 Undefined：`null` 和 `undefined`
-- 任意类型：`any`
-- Symbol 类型：`symbol`
-- BigInt 大数整数类型：`bigint`
+```ts
+let message: sting = "Hello World";
+message = 2  // error
 
-## 其他常用类型
+
+// any
+let message: any = "Hello World";
+message = 3   // ok
+```
+
+任意类型可以调用任何属性与方法，与JavaScript原先写法一致，TypeScript将不会检查当前是否存在该属性与方法。出错将无法在编译阶段发现。
+
+因此请尽量避免使用`any`。否则与不使用TypeScript没有任何区别
+
+### Never
+
+`never`类型表示那些永不存在的值类型。例如，总是会抛出异常或根本不会有返回值的函数表达式或者箭头函数表达式返回值类型。
+
+以下例子中两个变量的类型都将会是`never`类型
+
+```ts
+// 抛出异常
+let error = () => {    //编辑器提示：： let error: () => never
+  throw new Error("error")
+}
+// 死循环
+let endless = () => {   //编辑器提示： let endless: () => never
+  while(true) {}
+}
+```
+
+#### 技巧使用
+
+可以利用`never`的类型特性来实现全面检查，以下示例：
+
+```ts
+type Arg = string | number;
+
+function foo(arg: Arg) {
+  if (typeof arg === "string") {
+    // 这里 arg 被收窄为 string 类型
+  } else if (typeof arg === "number") {
+    // 这里 arg 被收窄为 number 类型
+  } else {
+    // arg 在这里是 never
+    const check: never = arg;
+  }
+}
+
+```
+
+例子中带有额外知识点：
+
+- `type Foo` ：[**类型别名**](#接口与类型别名)
+- `string | number` ：[**联合类型**](#联合类型)
+
+在`else`中，`arg`参数会赋值给声明为`never`类型的变量，如果逻辑正确，那么这里会正常编译。但是如果假定某一天中，你需要修改一下`Arg`[**类型别名**](#接口与类型别名)时：
+
+```ts
+type Arg = string | number ｜ boolean;
+```
+
+然而只是修改了类型别名增加一个类型的，却忘记了修改`foo`函数中的条件判断，那么`else`分支中的`arg`参数将会被收窄成`boolean`类型，导致无法赋值给`never`类型的变量中。
+
+```ts
+type Arg = string | number | boolean;
+
+function foo(arg: Arg) {
+  ...
+  } else {
+    const check: never = arg; // arg在这里会被认为是boolean类型的值，因此会报错
+    // error: 不能将类型“boolean”分配给类型“never”。ts(2322)
+  }
+}
+```
+
+由于`foo`函数总是会穷尽`Arg`的所有类型，因此当判断到`arg`可能是`boolean`并赋值给`never`时，所以会导致编译出错。
+
+通过以上例子中，我们可以通过该技巧来结论出：**使用`never`可以避免出现新增的联合类型没有对应的实现，目的是写出更加安全的代码。**
+
+## 其他类型
 
 以下作为其他类型的简单例子使用，更多需要点击进阶内容查看更多进阶方法
 
@@ -271,7 +324,7 @@ function getFavoriteNumber(): number {
 匿名函数与函数声明的方式会略有不同，当Typescript已经确定该如何调用它时，函数的参数会自动被赋予类型。也就是说，无需再声明类型，TypeScript也已经通过你调用的值来判断出来对应的类型
 
 ```ts
-const names = ['Alice', 'Bob', 'Eve'];
+const names = ["Alice", "Bob", "Eve"];
 names.forEach(function (s) {
   console.log(s.toLocaleUpperCase());
 });
@@ -282,7 +335,7 @@ names.forEach(function (s) {
 以下为错误例子：
 
 ```ts
-const users = [{name: 'Alice'}, {name: 'Bob'}, {name: 'Eve'}];
+const users = [{name: "Alice"}, {name: "Bob"}, {name: "Eve"}];
 users.forEach( s => {
   console.log(s.toLocaleUpperCase());  // error
 });
@@ -325,8 +378,8 @@ const positions3: { x: number, y: number } = {
 
 ```ts
 function printCoord(pt: { x: number; y: number }) {
-  console.log("The coordinate's x value is " + pt.x);
-  console.log("The coordinate's y value is " + pt.y);
+  console.log("The coordinate"s x value is " + pt.x);
+  console.log("The coordinate"s y value is " + pt.y);
 }
 printCoord({ x: 3, y: 7 }); // ok
 printCoord({ x: 3}); // error
@@ -347,7 +400,7 @@ printName({ first: "Bob" });
 printName({ first: "Alice", last: "Alisson" });
 
 // error  当前声明的类型中，并没有middle属性，因此出错
-printName({ first: "Alice", last: "Alisson", middle: 'Bob' }); 
+printName({ first: "Alice", last: "Alisson", middle: "Bob" }); 
 ```
 
 但是在TypeScript中，如果访问可选参数时，由于该参数可能为`undefined`，因此会出。如下例子：
@@ -393,6 +446,193 @@ Todo...
 
 Todo...
 
+## 枚举
+
+枚举（Enum）是允许开发者定义一组有命名的常量集合。提供可以基于数字和字符串等方式的枚举。（例如通讯录，指定名称指向的电话号码）
+
+枚举通过`enum`关键字的方式来定义
+
+### 数字枚举
+
+```ts
+enum Direction {
+  Up ,  // 0
+  Down,  // 1
+  Left,  // 2
+  Right  // 3
+}
+
+console.log(Direction.Up === 0)  //  true
+console.log(Direction[0] === "Up")  //  true
+```
+
+数字枚举的成员会自动赋值从`0`开始递增的数字，同时也会对枚举值到枚举名进行**反向映射**，以上例子将会被编译成：
+
+```js
+var Direction;
+(function (Direction) {
+    Direction[Direction["Up"] = 0] = "Up";
+    Direction[Direction["Down"] = 1] = "Down";
+    Direction[Direction["Left"] = 2] = "Left";
+    Direction[Direction["Right"] = 3] = "Right";
+})(Direction || (Direction = {}));
+```
+
+以上为TypeScript实际编译成JavaScript运行时代码，通过定义`Direction`对象变量来存储。反向映射主要由`Direction["Up"] = 0`赋值表达式，操作后返回`0`value值后，根据`Direction[0] = "Up"`再进行赋值，因此达到映射效果。
+
+当然，枚举方式还可以通过手动赋值的方式来定义
+
+```ts
+enum Direction {
+  Up = 1, 
+  Down,  // 2
+  Left,  // 3
+  Right,  // 4
+}
+```
+
+枚举值将会已上一个的枚举成员的值来进行递增
+
+```ts
+enum Direction {
+  Up = 6,  
+  Down = 1,  
+  Left,  // 2
+  Right,  // 3
+}
+```
+
+也可以通过枚举的引用来进行定义枚举成员的值
+
+```ts
+enum Direction {
+  Up = 6,  
+  Down = Direction.Up,  
+  Left,  // 7
+  Right,  // 8
+}
+
+console.log(Direction.Up === Direction.Down) // true
+console.log(Direction[6]) // "Down" 
+```
+
+#### 使用枚举
+
+使用枚举很简单，只需要将任何成员作为枚举本身的属性进行访问，并且也可以使用枚举的名称声明类型，以下例子：
+
+```ts
+enum StatesEnum {
+  No,  // 0
+  Yes,  // 1
+}
+
+function message(str: string, state: StatesEnum): void {
+  // ...
+}
+
+message("Hello World", StatesEnum.No)
+```
+
+### 字符串枚举
+
+字符串枚举，通过对成员的初始化赋值为字符串。**字符串没有递增行为**
+
+```ts
+enum Direction {
+  Up = "UP",
+  Down = "DOWN",
+  Left = "LEFT",
+  Right = "RIGHT",
+}
+
+```
+
+### 异构枚举
+
+异构枚举主要是，枚举可以与字符串和数字混合使用。**一般情况下是不建议这么做，除非你真的万不得已之时**
+
+```ts
+enum StatesEnum {
+  No = "0"
+  Yes = "YES",
+}
+
+```
+
+### 枚举成员的分类
+
+枚举成员主要常见为两类：
+
+- 常量成员
+  - 普通字面量的形式（字符串或数字）
+  - 对先前定义的常量枚举成员的引用（可以来自不同的枚举）
+  - 一个括号内的常量成员表达式
+  - 单数运算符的表达式`+` `-` `~`
+  - 二元运算符表达式`-` `*` `/` `%` `<<` `>>` `>>>` `&` `|` `^`
+- 计算成员
+  - 常见的`length`长度获取
+  - `Math`相关函数调用
+  - 更多日后再补充～
+
+**⚠️注意事项：**
+
+- 如果常量成员表达式被评估为`NaN` `Infinity`，这将会编译出错。
+- 当枚举成员中存在字符串成员时，不可再出现计算成员（包含常量成员的计算表达式也不可出现）
+- 当上一个是计算成员时，下一个成员必须初始化赋值
+
+```ts
+enum Char {
+  // 常量成员 const
+  a, 
+  b = Char.a,
+  c = 1 + 3,
+  // 计算成员 computed
+  d = Math.random(),
+  e = "123".length,
+}
+```
+
+#### 实际编译后
+
+如以下例子所示，**计算成员不会在编译阶段被计算，而是会保留在程序执行阶段。**
+
+```js
+var Char;
+(function (Char) {
+    Char[Char["a"] = 0] = "a";
+    Char[Char["b"] = 0] = "b";
+    Char[Char["c"] = 4] = "c";
+    Char[Char["d"] = Math.random()] = "d";
+    Char[Char["e"] = "123".length] = "e";
+})(Char || (Char = {}));
+
+```
+
+### 常量枚举
+
+常量枚举是通过在关键字`enum`前加上`const`标识。与普通枚举不同，它们在编译过程中被完全删除。
+
+```ts
+// 代码例子
+const enum Direction {
+  Up = "UP",
+  Down = "DOWN",
+}
+
+const direction = [Direction.Up, Direction.Down]
+```
+
+#### 实际编译后
+
+如下面编译后的例子所示。因此当我们不需要枚举的对象，只需要枚举的值的时候，可以使用常量枚举，减少编译后的代码
+
+```js
+"use strict";
+const direction = ["UP" /* Up */, "DOWN" /* Down */];
+```
+
+[**更多枚举内容扩展阅读**](https://www.typescriptlang.org/docs/handbook/enums.html)
+
 ## 接口与类型别名
 
 Todo...
@@ -417,7 +657,7 @@ let message: string = "Hello World!";
 ```ts
 let message;  // let message: any
 message = 1;
-message = 'Hello World'
+message = "Hello World"
 ```
 
 ### 联合类型
@@ -429,7 +669,7 @@ message = 'Hello World'
 ```ts
 // ok
 let AdditionalTypes: string | number;
-AdditionalTypes = 'Hello World'
+AdditionalTypes = "Hello World"
 AdditionalTypes = 1
 
 // error
@@ -445,7 +685,7 @@ AdditionalTypes = true
 
 ```ts
 let AdditionalTypes: string | number;
-AdditionalTypes = 'Hello World'
+AdditionalTypes = "Hello World"
 AdditionalTypes.length // 11
 AdditionalTypes = 1
 AdditionalTypes.length // Error
