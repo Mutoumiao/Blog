@@ -9,13 +9,21 @@
 ### 迷你`Render`函数实现
 
 ```ts
+interface Props {
+  [key: string]: any
+}
+
 interface vNode {
   tag: string
+  props?: Props
   children: string | Array<vNode>
 }
 
-const obj = {
+const vnode = {
   tag: 'div',
+  props: {
+    onClick: () => console.log('hello world'),
+  },
   children: [
     {
       tag: 'span',
@@ -24,20 +32,44 @@ const obj = {
   ],
 }
 
-function render(obj: vNode, root: HTMLElement) {
-  const el: HTMLElement = document.createElement(obj.tag)
+function render(vnode: vNode, container: HTMLElement) {
+  const { tag, props, children } = vnode
 
-  if (typeof obj.children === 'string') {
-    const text = document.createTextNode(obj.children)
-    el.appendChild(text)
-  } else if (obj.children) {
-    obj.children.forEach((child) => render(child, el))
+  // 使用 tag 作为标签名创建 DOM
+  const el: HTMLElement = document.createElement(tag)
+
+  // 遍历 props 将属性、事件添加到DOM 元素
+  if (props) {
+    for (const key in props) {
+      // 如果 key 为on 开头，说明是事件
+      if (/^on/.test(key)) {
+        const eventName = key.substring(2).toLowerCase()
+        el.addEventListener(eventName, props[key])
+      }
+      /*
+        const isPrimitive = (key: string): boolean => ['number', 'string'].includes(typeof key)
+      */
+      if (isPrimitive(key)) {
+        // 将其他属性作为元素属性
+        el.setAttribute(key, props[key])
+      }
+    }
   }
 
-  root.appendChild(el)
+  // 处理children
+  if (typeof children === 'string') {
+    // 如果children是字符串。因此创建文本子节点
+    el.appendChild(document.createTextNode(children))
+  } else if (children) {
+    // 递归调用 render 函数渲染子节点，使用当前元素 el 作为挂载点
+    children.forEach((child) => render(child, el))
+  }
+  // 将元素添加到挂载点下
+  container.appendChild(el)
 }
 
-render(obj, document.body)
+render(vnode, document.body)
+
 
 ```
 

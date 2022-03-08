@@ -725,6 +725,25 @@ Todo...
 
 Todo...
 
+## 实践例子
+
+`extends` 相当于 TypeScript 中的条件语句，然后 `in` 关键字可以理解为 TypeScript 中的遍历
+
+```ts
+// K extends keyof T限制K的类型必须是T的属性之一
+// T[K]是值得类型
+function getProperty<T, K extends keyof T>(o: T, name: K): T[K] {
+  return o[name]
+}
+const user = {
+  name: 'Do',
+  age: 15,
+}
+getProperty(user, 'name')
+getProperty(user, 'address') // error 
+// 类型“"address"”的参数不能赋给类型“"name" | "age"”的参数
+```
+
 ## 资料参考与扩展进阶
 
 - [TypeScript官方文档](https://www.typescriptlang.org/docs/handbook/intro.html)[【中文版】](https://zhongsp.gitbooks.io/typescript-handbook/content/)

@@ -28,16 +28,21 @@ module.exports = {
           ]
         },
         {
+          text: '前端框架',
+          children: [
+            { text: 'Vue3设计与实现', link: '/blog/vue3Design' },
+          ]
+        },
+        {
           text: 'HTML',
           children: [
             { text: 'WebSocket', link: '/blog/websocket' },
-            { text: 'HTML Meta', link: '/blog/meta'},
-            { text: 'Web Storage', link: '/blog/storage'},
-            { text: 'Web Worker', link: '/blog/webWorker'},
+            { text: 'HTML Meta', link: '/blog/meta' },
+            { text: 'Web Storage', link: '/blog/storage' },
+            { text: 'Web Worker', link: '/blog/webWorker' },
           ]
         },
-  
-      ]
-    }
+      ],
+    },
   },
 }
