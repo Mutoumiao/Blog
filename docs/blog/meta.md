@@ -158,6 +158,10 @@ max-age : 表示当前请求开始，该响应在多久内能被缓存和重用�
 
 <!-- cookie设定 -->
 <meta http-equiv="Set-Cookie" content="<cookie名>=<cookie值>">
+
+<!--Electron应用HTML设置 https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+<meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
 ```
 
 ## link
