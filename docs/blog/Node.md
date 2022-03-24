@@ -191,9 +191,7 @@ Buffer.isBuffer(obj)  // 判断当前数据是否为buffer
 
 - [fs-extra](https://github.com/jprichardson/node-fs-extra) fs模块的超集
 
-#### 实践实例
-
-常用文件操作API
+#### 常用文件操作API
 
 ```js
 const fs = require('fs')
@@ -203,5 +201,96 @@ fs.writeFile(file, data[, options], callback)  // 向指定文件中写入数据
 fs.appendFile(path, data[, options], callback)  // 追加的方式向指定文件中写入数据
 fs.copyFile(src, dest[, mode], callback)  // 将某个文件中的数据拷贝到另一文件
 fs.watchFile(filename[, options], listener)   // 将指定文件进行监控
+```
+
+#### 大文件操作方法
+
+通过使用Buffer 缓存区的功能方法，将读取在字节内容存入Buffer中，再通过Buffer写入文件中
+
+```ts
+// 使用fs.open(path)方法打开文件获取fd，再通过以下API操作字节读取/写入
+// 注意：操作后需调用 fs.close(fd) 关闭
+fs.read(fd, buffer, offset, length, position, callback)
+fs.write(fd, buffer[, offset[, length[, position]]], callback)
+```
+
+#### 常见目录操作API
+
+```ts
+fs.access(path[, mode], callback)   // 判断文件或目录是否具有操作权限
+fs.stat(path[, options], callback)    // 获取目录及文件信息
+fs.mkdir(path[, options], callback)   // 创建目录
+fs.rmdir(path[, options], callback)   // 删除目录
+fs.readdir(path[, options], callback)   // 读取目录中内容
+fs.unlink(path, callback)   // 删除指定文件
+```
+
+### 模块
+
+#### module属性
+
+任意js文件就是一个模块，可以直接使用module属性
+
+```js
+module.id  // 返回模块标识符，一般是一个绝对路径
+module.filename  // 返回文件模块的绝对路径
+module.loaded   // 返回布尔值，标识模块是否完成加载
+module.parent   // 返回对象存放调用当前模块的模块
+module.children  // 返回数组，存放当前模块调用的其他模块
+module.exports   // 返回当前模块需要暴露的内容
+module.paths   //  返回数组，存放不同目录下的node_modules位置
+```
+
+#### require 属性
+
+require 方法基本功能是读取并执行一个模块文件
+
+```js
+require.resolve(request[, options])   // 返回模块文件绝对路径
+require.main   // 返回主模块对象
+// Module {
+//   id: '.',
+//   path: '/absolute/path/to',
+//   exports: {},
+//   filename: '/absolute/path/to/entry.js',
+//   loaded: false,
+//   children: [],
+//   paths:
+//    [ '/absolute/path/to/node_modules',
+//      '/absolute/path/node_modules',
+//      '/absolute/node_modules',
+//      '/node_modules' ] }
+```
+
+### Node 事件循环
+
+与浏览器中的事件循环只有宏任务队列与微任务队列不同。Node事件队列包含有以下内容：
+
+```txt
+   ┌───────────────────────────┐
+┌─>│           timers          │
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+│  │     pending callbacks     │
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+│  │       idle, prepare       │
+│  └─────────────┬─────────────┘      ┌───────────────┐
+│  ┌─────────────┴─────────────┐      │   incoming:   │
+│  │           poll            │<─────┤  connections, │
+│  └─────────────┬─────────────┘      │   data, etc.  │
+│  ┌─────────────┴─────────────┐      └───────────────┘
+│  │           check           │
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+└──┤      close callbacks      │
+   └───────────────────────────┘
 
 ```
+
+- **timers 定时器**：执行 `setTimeout()` 和 `setInterval()` 的回调函数
+- **pending callbacks 待定回调**：执行系统操作的回调（例如 tcp、udp）
+- **idle, prepare**：仅系统内部使用
+- **poll 轮询**：检索新的 I/O 事件、执行与 I/O 相关的回调（例如 读取文件等I/O操作)
+- **check 检测**： `setImmediate()` 回调函数在这里执行
+- **close callbacks 关闭的回调函数**：执行`close`事件的回调，如：`socket.on('close', ...)`
