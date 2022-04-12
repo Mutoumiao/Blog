@@ -63,19 +63,48 @@ git clone username@host:/path/to/repository # 远端服务器上的仓库
 git status
 ```
 
+#### 帮助
+
+通过使用`help`查看特定**命令**帮助文档，使用`--web`通过浏览器打开
+
+```bash
+git help <命令> --web
+
+# 例子
+git help commit --web
+```
+
+::: warning
+打开帮助文档功能出错处理 [help命令web文档无法打开](#help命令web文档无法打开)
+:::
+
+#### 基本用法
+
+![git base](../images/basic-usage.png)
+
 #### 添加和提交
 
-使用`git add` 将文件添加到暂存区，`git commit`命令提交暂存区文件
+使用`git add` 将文件添加到暂存区，`git commit`命令提交暂存区文件，使用`git help <add | commit> --web` 查看更多信息。
 
 ```bash
 git add <filename>
 git add *
 
-
 git commit -m "代码提交信息"
 ```
 
+#### 撤销
+
+使用`git reset`实现撤销操作，使用`git help reset --web` 查看更多信息
+
+```bash
+git reset   # 当文件在暂存区时，使用reset撤销添加
+git reset --soft HEAD^   # 撤消上一次提交
+```
+
 #### 分支
+
+使用`git help <branch | checkout> --web` 查看更多信息。
 
 ```bash
 git branch <分支名称> # 创建分支
@@ -90,7 +119,7 @@ git push origin <分支名称>   # 分支推送到远程库
 
 #### Log
 
-`git log` 命令为查看本地仓库的历史记录。以下为常用参数：
+`git log` 命令为查看本地仓库的历史记录，使用`git help log --web` 查看更多信息。
 
 ```bash
 git log     # 默认 （只查看当前分支历史）
@@ -99,7 +128,6 @@ git log -n<数字n>    # 查看最近n条记录
 git log --oneline  -n2  # 简洁方式显示最新2条记录
 git log --all  # 查看所有分支历史
 git log --graph  # 显示分支线条
-git help --web log # 通过浏览器打开本地帮助文档页面
 
 # 技巧
 gitk  # 通过图形化打开版本历史界面
@@ -109,9 +137,7 @@ gitk --all # 显示所有分支
 git config format.pretty oneline  显示历史记录时，每个提交的信息只显示一行
 ```
 
-::: warning
-打开帮助文档功能出错处理 [help命令web文档无法打开](#help命令web文档无法打开)
-:::
+#### HEAD
 
 ## 🙌🏼 实战技巧
 
@@ -301,3 +327,4 @@ git config --global help.format html
 - [git提交规范](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
 - [git 简明指南](https://www.html.cn/doc/git-guide/)
 - [学习Git分支](https://learngitbranching.js.org/?demo=&locale=zh_CN)
+- [图解Git](http://marklodato.github.io/visual-git-guide/index-zh-cn.html#basic-usage)
